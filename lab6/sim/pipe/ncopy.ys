@@ -1,0 +1,234 @@
+#/* $begin ncopy-ys */
+##################################################################
+# ncopy.ys - Copy a src block of len ints to dst.
+# Return the number of positive ints (>0) contained in src.
+#
+# Include your name and ID here.
+# name:JiTing
+# ID:5140379049
+# Describe how and why you modified the baseline code.
+# First, unroll the Loop to 24 Loops, every time copy 24 elements -> reduce the times of loop
+# Second, use jump table to tackle the remainder -> reduce the times of remainder loop to one
+# Third, use iaddl and leave -> reduce the number of instructions
+# Forth, combination of IMRMOVL and IRMMOVL -> help to optimize it in hcl to avoid load/use hazard
+# Fifth, combination of IIADDL and IJLE -> help to optimize it in hcl to avoid mispredicted branch hazard
+#
+##################################################################
+# Do not modify this portion
+# Function prologue.
+ncopy:	pushl %ebp		# Save old frame pointer
+	rrmovl %esp,%ebp	# Set up new frame pointer
+	pushl %esi		# Save callee-save regs
+	pushl %ebx
+	mrmovl 8(%ebp),%ebx	# src
+	mrmovl 16(%ebp),%edx	# len
+	mrmovl 12(%ebp),%ecx	# dst
+
+##################################################################
+# You can modify this portion
+	# Loop header
+	xorl %eax,%eax		# count = 0;
+	iaddl $-24, %edx	# len-24
+	jl Rcv			# if len < 24, goto Rcv
+
+Loop0:	iaddl $96, %ebx		# src + 24*4
+	iaddl $96, %ecx		# dst + 24*4
+	mrmovl -96(%ebx), %esi	# read val from src...
+	rmmovl %esi,-96(%ecx)
+	andl %esi, %esi		# val <= 0?
+	jle Loop1   		# if so, goto Loop1
+	iaddl 1,%eax		# else, count++
+
+Loop1:	mrmovl -92(%ebx), %esi	# read val from src...
+	rmmovl %esi,-92(%ecx)
+	andl %esi, %esi		# val <= 0?
+	jle Loop2  		# if so, goto Loop2
+	iaddl 1,%eax		# else, count++
+
+Loop2:	mrmovl -88(%ebx), %esi	# read val from src...
+	rmmovl %esi,-88(%ecx)
+	andl %esi, %esi		# val <= 0?
+	jle Loop3  		# if so, goto Loop3
+	iaddl 1,%eax		# else, count++
+
+Loop3:	mrmovl -84(%ebx), %esi	# read val from src...
+	rmmovl %esi,-84(%ecx)
+	andl %esi, %esi		# val <= 0?
+	jle Loop4  		# if so, goto Loop4
+	iaddl 1,%eax		# else, count++
+
+Loop4:	mrmovl -80(%ebx), %esi	# read val from src...
+	rmmovl %esi,-80(%ecx)
+	andl %esi, %esi		# val <= 0?
+	jle Loop5 		# if so, goto Loop5
+	iaddl 1,%eax		# else, count++
+
+Loop5:	mrmovl -76(%ebx), %esi	# read val from src...
+	rmmovl %esi,-76(%ecx)
+	andl %esi, %esi		# val <= 0?
+	jle Loop6 		# if so, goto Loop6
+	iaddl 1,%eax		# else, count++
+
+Loop6:	mrmovl -72(%ebx), %esi	# read val from src...
+	rmmovl %esi,-72(%ecx)
+	andl %esi, %esi		# val <= 0?
+	jle Loop7 		# if so, goto Loop7
+	iaddl 1,%eax		# else, count++
+
+Loop7:	mrmovl -68(%ebx), %esi	# read val from src...
+	rmmovl %esi,-68(%ecx)
+	andl %esi, %esi		# val <= 0?
+	jle Loop8 	 	# if so, goto Loop8
+	iaddl 1,%eax		# else, count++
+
+Loop8:	mrmovl -64(%ebx), %esi	# read val from src...
+	rmmovl %esi,-64(%ecx)
+	andl %esi, %esi		# val <= 0?
+	jle Loop9 		# if so, goto Loop9
+	iaddl 1,%eax		# else, count++
+
+Loop9:	mrmovl -60(%ebx), %esi	# read val from src...
+	rmmovl %esi,-60(%ecx)
+	andl %esi, %esi		# val <= 0?
+	jle Loop10  		# if so, goto Loop10
+	iaddl 1,%eax		# else, count++
+
+Loop10:mrmovl -56(%ebx), %esi	# read val from src...
+	rmmovl %esi,-56(%ecx)
+	andl %esi, %esi		# val <= 0?
+	jle Loop11		# if so, goto Loop11
+	iaddl 1,%eax		# else, count++
+
+Loop11:mrmovl -52(%ebx), %esi	# read val from src...
+	rmmovl %esi,-52(%ecx)
+	andl %esi, %esi		# val <= 0?
+	jle Loop12		# if so, goto Loop12
+	iaddl 1,%eax		# else, count++
+
+Loop12:mrmovl -48(%ebx), %esi	# read val from src...
+	rmmovl %esi,-48(%ecx)
+	andl %esi, %esi		# val <= 0?
+	jle Loop13		# if so, goto Loop13
+	iaddl 1,%eax		# else, count++
+
+Loop13:mrmovl -44(%ebx), %esi	# read val from src...
+	rmmovl %esi,-44(%ecx)
+	andl %esi, %esi		# val <= 0?
+	jle Loop14		# if so, goto Loop14
+	iaddl 1,%eax		# else, count++
+
+Loop14:mrmovl -40(%ebx), %esi	# read val from src...
+	rmmovl %esi,-40(%ecx)
+	andl %esi, %esi		# val <= 0?
+	jle Loop15		# if so, goto Loop15
+	iaddl 1,%eax		# else, count++
+
+Loop15:mrmovl -36(%ebx), %esi	# read val from src...
+	rmmovl %esi,-36(%ecx)
+	andl %esi, %esi		# val <= 0?
+	jle Loop16		# if so, goto Loop16
+	iaddl 1,%eax		# else, count++
+
+Loop16:mrmovl -32(%ebx), %esi	# read val from src...
+	rmmovl %esi,-32(%ecx)
+	andl %esi, %esi		# val <= 0?
+	jle Loop17		# if so, goto Loop17
+	iaddl 1,%eax		# else, count++
+
+Loop17:mrmovl -28(%ebx), %esi	# read val from src...
+	rmmovl %esi,-28(%ecx)
+	andl %esi, %esi		# val <= 0?
+	jle Loop18		# if so, goto Loop18
+	iaddl 1,%eax		# else, count++
+
+Loop18:mrmovl -24(%ebx), %esi	# read val from src...
+	rmmovl %esi,-24(%ecx)
+	andl %esi, %esi		# val <= 0?
+	jle Loop19		# if so, goto Loop19
+	iaddl 1,%eax		# else, count++
+
+Loop19:mrmovl -20(%ebx), %esi	# read val from src...
+	rmmovl %esi,-20(%ecx)
+	andl %esi, %esi		# val <= 0?
+	jle Loop20		# if so, goto Loop20
+	iaddl 1,%eax		# else, count++
+
+Loop20:mrmovl -16(%ebx), %esi	# read val from src...
+	rmmovl %esi,-16(%ecx)
+	andl %esi, %esi		# val <= 0?
+	jle Loop21		# if so, goto Loop21
+	iaddl 1,%eax		# else, count++
+
+Loop21:mrmovl -12(%ebx), %esi	# read val from src...
+	rmmovl %esi,-12(%ecx)
+	andl %esi, %esi		# val <= 0?
+	jle Loop22		# if so, goto Loop22
+	iaddl 1,%eax		# else, count++
+
+Loop22:mrmovl -8(%ebx), %esi	# read val from src...
+	rmmovl %esi,-8(%ecx)
+	andl %esi, %esi		# val <= 0?
+	jle Loop23		# if so, goto Loop23
+	iaddl 1,%eax		# else, count++
+
+Loop23:mrmovl -4(%ebx), %esi	# read val from src...
+	rmmovl %esi,-4(%ecx)
+	andl %esi, %esi		# val <= 0?
+	jle Npos			# if so, goto Npos
+	iaddl 1,%eax		# else, count++
+
+Npos:	
+	iaddl $-24, %edx	# len > 0?
+	jge Loop0		# if so, goto Loop0
+
+# tackle the remainder
+Rcv:	iaddl $24, %edx		# len<=0?
+	jle Done 		# if so, goto Done
+	addl %edx, %edx
+	addl %edx, %edx	# index: 4*%edx
+	addl %edx, %ecx	# adapt dst to the Loop
+	addl %edx, %ebx	# adapt src to the Loop
+	mrmovl JT(%edx),%edx 	# jump table address
+	pushl %edx		# push the address, avoid load/use hazard
+	irmovl $0, %edx		# set len=0
+	ret 			# jump to the address
+	
+# jump table
+	.align 4
+JT:	.long Done
+	.long Loop23
+	.long Loop22
+	.long Loop21
+	.long Loop20
+	.long Loop19
+	.long Loop18
+	.long Loop17
+	.long Loop16
+	.long Loop15
+	.long Loop14
+	.long Loop13
+	.long Loop12
+	.long Loop11
+	.long Loop10
+	.long Loop9
+	.long Loop8
+	.long Loop7
+	.long Loop6
+	.long Loop5
+	.long Loop4
+	.long Loop3
+	.long Loop2
+	.long Loop1
+
+##################################################################
+# Do not modify the following section of code
+# Function epilogue.
+Done:
+	popl %ebx
+	popl %esi
+	leave
+	ret
+##################################################################
+# Keep the following label at the end of your function
+End:
+#/* $end ncopy-ys */
